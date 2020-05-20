@@ -8,6 +8,7 @@ using SoftPlayer.Handlers;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SofPlayer.API.Tests
 {
@@ -24,17 +25,16 @@ namespace SofPlayer.API.Tests
         }
 
         [TestMethod]
-        public void CalculateInterestRate_Success()
+        public async Task CalculateInterestRate_Success()
         {
             //Arrange
-            string endValue = "105,10";
-            var command = new CalculateInterestRateCommand(It.IsAny<decimal>(), It.IsAny<int>());
+            string endValue = "105,10";           
 
-            _calculateInterestHandler.Setup(s => s.Handler(command))
-                .Returns(Event<decimal>.CreateSuccess(105.1M));
+            _calculateInterestHandler.Setup(s => s.Handler(It.IsAny<CalculateInterestCommand>()))
+                .ReturnsAsync(Event<decimal>.CreateSuccess(105.1M));
 
             //Act
-            var value = _controller.CalculateInterestRate(command);
+            var value = await _controller.CalculateInterestRate(It.IsAny<decimal>(), It.IsAny<int>());
 
             //Assert
             var okResult = value as OkObjectResult;
@@ -42,21 +42,19 @@ namespace SofPlayer.API.Tests
             Assert.IsNotNull(okResult);
             Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode.GetValueOrDefault());
 
-            Assert.AreEqual((string)okResult.Value, endValue);
-            _calculateInterestHandler.Verify(v => v.Handler(command));
+            Assert.AreEqual((string)okResult.Value, endValue);            
         }
 
         [TestMethod]
-        public void CalculateInterestRate_Error()
+        public async Task CalculateInterestRate_Error()
         {
-            //Arrange            
-            var command = new CalculateInterestRateCommand(It.IsAny<decimal>(), It.IsAny<int>());
+            //Arrange                        
             string error = "error";
-            _calculateInterestHandler.Setup(s => s.Handler(command))
-                .Returns(Event<decimal>.CreateError(error));
+            _calculateInterestHandler.Setup(s => s.Handler(It.IsAny<CalculateInterestCommand>()))
+                .ReturnsAsync(Event<decimal>.CreateError(error));
 
             //Act
-            var value = _controller.CalculateInterestRate(command);
+            var value = await _controller.CalculateInterestRate(It.IsAny<decimal>(), It.IsAny<int>());
 
             //Assert
             var errorResult = value as BadRequestObjectResult;
@@ -64,8 +62,7 @@ namespace SofPlayer.API.Tests
             Assert.IsNotNull(errorResult);
             Assert.AreEqual(StatusCodes.Status400BadRequest, errorResult.StatusCode);
 
-            Assert.AreEqual((string)errorResult.Value, error);
-            _calculateInterestHandler.Verify(v => v.Handler(command));
+            Assert.AreEqual((string)errorResult.Value, error);            
         }
     }
 }

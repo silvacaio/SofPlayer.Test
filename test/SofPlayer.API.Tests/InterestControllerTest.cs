@@ -23,7 +23,7 @@ namespace SofPlayer.API.Tests
             var value = _controller.GetInterestRate();
 
             //Assert
-            Assert.AreEqual(value, InterestRate._valueInterest);
+            Assert.AreEqual(value, InterestRate.Value);
         }
     }
 }

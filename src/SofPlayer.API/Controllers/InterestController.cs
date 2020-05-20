@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SoftPlayer.Domain.Interest;
+using System.Net.Http;
 
 namespace SofPlayer.API.Controllers
 {    
@@ -9,8 +10,8 @@ namespace SofPlayer.API.Controllers
         [Route("taxajuros")]
         [HttpGet]
         public decimal GetInterestRate()
-        {
-            return InterestRate._valueInterest;
+        {            
+            return InterestRate.Value;
         }
     }
 }

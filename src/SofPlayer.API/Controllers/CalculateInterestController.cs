@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SofPlayer.API.Configurations;
 using SoftPlayer.Domain.Interest;
 using SoftPlayer.Domain.Interest.Commands;
 
@@ -17,7 +19,7 @@ namespace SofPlayer.API.Controllers
         public CalculateInterestController(ICalculateInterestRateHandler calculateInterestHandler)
         {
             _calculateInterestHandler = calculateInterestHandler ?? throw new ArgumentNullException(nameof(calculateInterestHandler));
-        }      
+        }
 
         [HttpGet]
         [Route("showmethecode")]
@@ -28,11 +30,13 @@ namespace SofPlayer.API.Controllers
 
         [Route("calculajuros")]
         [HttpGet]
-        public IActionResult CalculateInterestRate([FromQuery] CalculateInterestRateCommand command)
+        public async Task<IActionResult> CalculateInterestRate([Required]decimal value, [Required]int time)
         {
             try
             {
-                var result = _calculateInterestHandler.Handler(command);
+                var result = await _calculateInterestHandler.Handler(
+                    CalculateInterestCommand.CalculateInterestRateCommandFactory.Create(value, time, $"{ConfigurationsValues.SoftPlayerURL}/taxajuros"));
+
                 if (result.Valid)
                     return Ok(result.Value.ToString("#.00"));
 

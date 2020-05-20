@@ -1,25 +1,34 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using SoftPlayer.Domain.Interest.Commands;
+using SoftPlayer.Handlers;
+using System.Threading.Tasks;
 
 namespace SoftPlayer.Domain.Tests.Interest.Commands
 {
     [TestClass()]
     public class CalculateInterestRateCommandHandlerTest
     {
-        readonly CalculateInterestRateCommandHandler handler;
+        private readonly CalculateInterestCommandHandler handler;
+        private readonly Mock<IGetInterestRateCommandHandler> _getInterestRateCommandHandler;
         public CalculateInterestRateCommandHandlerTest()
         {
-            handler = new CalculateInterestRateCommandHandler();
+            _getInterestRateCommandHandler = new Mock<IGetInterestRateCommandHandler>();
+
+            _getInterestRateCommandHandler.Setup(a => a.Handler(It.IsAny<GetInterestRateCommand>()))
+              .ReturnsAsync(Event<decimal>.CreateSuccess(0.01M));
+
+            handler = new CalculateInterestCommandHandler(_getInterestRateCommandHandler.Object);
         }
 
         [TestMethod()]
-        public void Calculate_ReturnCorrectValue()
+        public async Task Calculate_ReturnCorrectValue_Success()
         {
             //Arrange
-            var command = new CalculateInterestRateCommand(100, 5);          
+            var command = CalculateInterestCommand.CalculateInterestRateCommandFactory.Create(100, 5, "url");
 
             //Act
-            var result = handler.Handler(command);
+            var result = await handler.Handler(command);
 
             //Assert
             Assert.IsTrue(result.Valid);
@@ -27,13 +36,13 @@ namespace SoftPlayer.Domain.Tests.Interest.Commands
         }
 
         [TestMethod()]
-        public void Calculate_InitialValueInvalid()
+        public async Task Calculate_InitialValueInvalid_Error()
         {
             //Arrange
-            var command = new CalculateInterestRateCommand(0, 5);
+            var command = CalculateInterestCommand.CalculateInterestRateCommandFactory.Create(0, 5, "url");
 
             //Act
-            var result = handler.Handler(command);
+            var result = await handler.Handler(command);
 
             //Assert
             Assert.IsFalse(result.Valid);
@@ -41,13 +50,27 @@ namespace SoftPlayer.Domain.Tests.Interest.Commands
         }
 
         [TestMethod()]
-        public void Calculate_TimeInvalid()
+        public async Task Calculate_TimeInvalid_Error()
         {
             //Arrange
-            var command = new CalculateInterestRateCommand(100, 0);
+            var command = CalculateInterestCommand.CalculateInterestRateCommandFactory.Create(100, 0, "url");
 
             //Act
-            var result = handler.Handler(command);
+            var result = await handler.Handler(command);
+
+            //Assert
+            Assert.IsFalse(result.Valid);
+            Assert.IsNotNull(result.Error);
+        }
+
+        [TestMethod()]
+        public async Task Calculate_UrlInvalid_Error()
+        {
+            //Arrange
+            var command = CalculateInterestCommand.CalculateInterestRateCommandFactory.Create(100, 5, "");
+
+            //Act
+            var result = await handler.Handler(command);
 
             //Assert
             Assert.IsFalse(result.Valid);

@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SofPlayer.API.Configurations;
+using SoftPlayer.Domain.Interest.Commands;
 using SoftPlayer.IoC;
 
 namespace SofPlayer.API
@@ -30,6 +31,8 @@ namespace SofPlayer.API
             services.AddControllers();
 
             services.AddSwaggerConfig();
+
+            services.AddConfigurations(Configuration); 
 
             NativeInjectorBootStrapper.RegisterServices(services);
         }
