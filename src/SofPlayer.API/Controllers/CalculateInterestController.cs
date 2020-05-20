@@ -25,7 +25,7 @@ namespace SofPlayer.API.Controllers
         [Route("showmethecode")]
         public string ShowMeTheCode()
         {
-            return "https://github.com/silvacaio/calculajuros";
+            return "https://github.com/silvacaio/SofPlayer.Test";
         }
 
         [Route("calculajuros")]
