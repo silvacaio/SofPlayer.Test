@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SoftPlayer.Application.Handlers;
+using SoftPlayer.Application.Handlers.Interest;
 using SoftPlayer.Domain.Core.Handler;
-using SoftPlayer.Domain.Interest.Commands;
+using SoftPlayer.Domain.Interest.Handlers;
 using System;
 
 namespace SoftPlayer.IoC
@@ -13,7 +15,6 @@ namespace SoftPlayer.IoC
 
             services.AddHttpClient<IHttpHandler, HttpClientHandler>()
              .SetHandlerLifetime(TimeSpan.FromMinutes(5));
-
 
             services.AddScoped<IGetInterestRateCommandHandler, GetInterestRateCommandHandler>();
             services.AddScoped<ICalculateInterestRateHandler, CalculateInterestCommandHandler>();

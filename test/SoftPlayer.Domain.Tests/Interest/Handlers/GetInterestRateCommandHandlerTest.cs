@@ -1,11 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using SoftPlayer.Application.Handlers;
+using SoftPlayer.Application.Handlers.Interest;
 using SoftPlayer.Domain.Core.Handler;
 using SoftPlayer.Domain.Interest.Commands;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace SoftPlayer.Domain.Tests.Interest.Commands
+namespace SoftPlayer.Application.Tests.Interest.Handlers
 {
     [TestClass()]
     public class GetInterestRateCommandHandlerTest

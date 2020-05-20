@@ -1,18 +1,13 @@
-﻿using SoftPlayer.Handlers;
+﻿using SoftPlayer.Domain.Core.Handler;
+using SoftPlayer.Domain.Interest.Commands;
+using SoftPlayer.Domain.Interest.Handlers;
+using SoftPlayer.Handlers;
 using System;
 using System.Text.Json;
-using System.Net.Http;
 using System.Threading.Tasks;
-using SoftPlayer.Domain.Core.Handler;
 
-namespace SoftPlayer.Domain.Interest.Commands
+namespace SoftPlayer.Application.Handlers.Interest
 {
-    public interface IGetInterestRateCommandHandler : IHandler<GetInterestRateCommand, Event<decimal>>
-    {
-
-    }
-
-
     public class GetInterestRateCommandHandler : IGetInterestRateCommandHandler
     {
         private readonly IHttpHandler _httpClient;
@@ -33,7 +28,7 @@ namespace SoftPlayer.Domain.Interest.Commands
 
                 var result = JsonSerializer.Deserialize<decimal>(responseString);
 
-                return Event<decimal>.CreateSuccess(result);   
+                return Event<decimal>.CreateSuccess(result);
 
             }
             catch (Exception ex)

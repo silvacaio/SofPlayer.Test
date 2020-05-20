@@ -1,16 +1,15 @@
-﻿using SoftPlayer.Handlers;
+﻿using SoftPlayer.Domain.Interest.Commands;
+using SoftPlayer.Domain.Interest.Handlers;
+using SoftPlayer.Handlers;
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace SoftPlayer.Domain.Interest.Commands
+namespace SoftPlayer.Application.Handlers.Interest
 {
-    public interface ICalculateInterestRateHandler : IHandler<CalculateInterestCommand, Event<decimal>>
-    {
-
-    }
-
     public class CalculateInterestCommandHandler :
-        ICalculateInterestRateHandler
+      ICalculateInterestRateHandler
     {
         private readonly IGetInterestRateCommandHandler _getInterestRateHandler;
 

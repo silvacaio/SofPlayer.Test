@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SofPlayer.API.Controllers;
 using SoftPlayer.Domain.Interest.Commands;
+using SoftPlayer.Domain.Interest.Handlers;
 using SoftPlayer.Handlers;
 using System;
 using System.Collections.Generic;
